@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>豆包视频批量生成</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23353c48'/%3E%3Cstop offset='1' stop-color='%2316191f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Crect x='19' y='12' width='26' height='40' rx='5' fill='none' stroke='%2378c6ff' stroke-width='3'/%3E%3Cpath d='M28 25l10 7-10 7z' fill='%2378c6ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/app.css?v=__VERSION__">
+</head>
+<body>
+  <!-- Icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+      <symbol id="i-ratio" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.5"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="i-window" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18"/><circle cx="6.5" cy="6.5" r=".6"/><circle cx="9" cy="6.5" r=".6"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.5h7.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></symbol>
+      <symbol id="i-folder-plus" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.5h7.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><path d="M12 11v5M9.5 13.5h5"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M8 5.5v13a1 1 0 0 0 1.5.9l10.2-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><rect fill="currentColor" stroke="none" x="6.5" y="5" width="3.5" height="14" rx="1"/><rect fill="currentColor" stroke="none" x="14" y="5" width="3.5" height="14" rx="1"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 4.3L2.6 17.6A2 2 0 0 0 4.3 20.6h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4.5M12 17.2v.1"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.1"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.8L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.8L20 16"/><path d="M20 20v-4h-4"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M6.5 7l.9 12a2 2 0 0 0 2 1.8h5.2a2 2 0 0 0 2-1.8l.9-12"/></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8.5 8.5"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></symbol>
+      <symbol id="i-retry" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4.5h4.5"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 18.5l-1.5 3 4-1.2A9 9 0 1 0 5 18.5z"/></symbol>
+      <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></symbol>
+      <symbol id="i-qr" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h2v2M20 14v.1M18 18h2v2M14 20h2"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+      <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".9"/><circle cx="4.5" cy="12" r=".9"/><circle cx="4.5" cy="18" r=".9"/></symbol>
+      <symbol id="i-stack" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><rect x="19" y="12" width="26" height="40" rx="5" fill="none" stroke="currentColor" stroke-width="3.2"/><path d="M28 25l10 7-10 7z" fill="currentColor"/></svg>
+        </div>
+        <div class="brand-text">
+          <h1>豆包视频批量生成</h1>
+          <p>提示词 + 参考图 → AI 创作 · 视频</p>
+        </div>
+      </div>
+
+      <div class="locked" title="每个任务都固定使用这些参数，提交前会逐项核对">
+        <span class="locked-tag"><svg class="ic"><use href="#i-lock"/></svg>已锁定</span>
+        <span class="locked-item"><svg class="ic"><use href="#i-sparkle"/></svg><b id="fx-model">Seedance 2.5</b></span>
+        <span class="locked-item"><svg class="ic"><use href="#i-ratio"/></svg><b id="fx-ratio">9:16</b></span>
+        <span class="locked-item"><svg class="ic"><use href="#i-clock"/></svg><b id="fx-duration">30s</b></span>
+      </div>
+
+      <div class="top-actions">
+        <button class="status-pill" id="conn-status" type="button" title="点击检查豆包登录状态">
+          <i></i><span>Chrome 未启动</span>
+        </button>
+        <button class="icon-btn" id="btn-show-chrome" type="button" title="显示自动化 Chrome 窗口" aria-label="显示自动化 Chrome 窗口"><svg class="ic"><use href="#i-window"/></svg></button>
+        <button class="icon-btn" id="btn-open-output" type="button" title="打开视频保存文件夹" aria-label="打开视频保存文件夹"><svg class="ic"><use href="#i-folder"/></svg></button>
+        <button class="icon-btn" id="btn-settings" type="button" title="设置" aria-label="设置"><svg class="ic"><use href="#i-gear"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+    <div id="banners" class="banners"></div>
+
+    <main class="layout">
+      <!-- Composer -->
+      <section class="card composer" aria-labelledby="composer-title">
+        <div class="card-head">
+          <div>
+            <h2 id="composer-title">新建任务</h2>
+            <p class="card-sub">写好提示词，选择参考图文件夹</p>
+          </div>
+        </div>
+
+        <div class="seg" role="tablist" aria-label="任务类型">
+          <button role="tab" type="button" class="active" data-mode="single" aria-selected="true"><svg class="ic"><use href="#i-film"/></svg>单个任务</button>
+          <button role="tab" type="button" data-mode="batch" aria-selected="false"><svg class="ic"><use href="#i-stack"/></svg>批量导入</button>
+        </div>
+
+        <form id="form-single" autocomplete="off">
+          <div class="field">
+            <div class="field-label"><label for="prompt">提示词</label><span class="counter" id="prompt-count">0 字</span></div>
+            <textarea id="prompt" rows="6" placeholder="描述你想要的画面，例如：镜头缓慢推近参考图中的女孩，她回头微笑，傍晚的阳光透过树叶洒在脸上，电影感，不要字幕"></textarea>
+            <p class="hint">不用写比例和时长，已固定为 9:16 · 30s。文件夹里有 prompt.txt 时可留空，自动读取。</p>
+          </div>
+
+          <div class="field">
+            <div class="field-label"><span>参考图片</span><span class="counter" id="img-count"></span></div>
+            <div id="folder-zone"></div>
+            <div class="manual-path" id="manual-path" hidden>
+              <input id="folder" type="text" placeholder="/Users/你/Pictures/素材" spellcheck="false" aria-label="图片文件夹路径">
+            </div>
+          </div>
+
+          <button type="submit" class="btn primary block lg" id="btn-add"><svg class="ic"><use href="#i-plus"/></svg>加入队列</button>
+        </form>
+
+        <form id="form-batch" autocomplete="off" hidden>
+          <p class="explain">选择一个总文件夹，里面<b>每个子文件夹就是一个任务</b>：放参考图（最多 10 张）和 <code>prompt.txt</code>。没有 prompt.txt 的子文件夹使用下面的默认提示词。</p>
+          <div class="tree" aria-hidden="true">
+            <div><svg class="ic"><use href="#i-folder"/></svg>素材总文件夹</div>
+            <div class="sub"><svg class="ic"><use href="#i-folder"/></svg>01-海边 <span>prompt.txt · a.jpg · b.png</span></div>
+            <div class="sub"><svg class="ic"><use href="#i-folder"/></svg>02-街景 <span>prompt.txt · c.jpg</span></div>
+            <div class="sub"><svg class="ic"><use href="#i-folder"/></svg>03-森林 <span>d.jpg · e.jpg</span></div>
+          </div>
+          <div class="field">
+            <div class="field-label"><label for="batch-parent">总文件夹</label></div>
+            <div class="row">
+              <input id="batch-parent" type="text" placeholder="/Users/你/Pictures/批量素材" spellcheck="false">
+              <button type="button" class="btn" id="btn-pick-batch"><svg class="ic"><use href="#i-folder"/></svg>选择</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label"><label for="batch-prompt">默认提示词（可选）</label></div>
+            <textarea id="batch-prompt" rows="3" placeholder="子文件夹没有 prompt.txt 时使用"></textarea>
+          </div>
+          <button type="submit" class="btn primary block lg" id="btn-add-batch"><svg class="ic"><use href="#i-stack"/></svg>全部加入队列</button>
+        </form>
+
+        <details class="how" open>
+          <summary><svg class="ic"><use href="#i-info"/></svg>它会怎么做</summary>
+          <ol>
+            <li><b>自动提交</b>打开专用 Chrome，进入豆包「AI 创作 → 视频」，锁定 Seedance 2.5 · 9:16 · 30s，上传图片并发送</li>
+            <li><b>自动确认</b>豆包回复「参数确认」时，自动回复让它继续生成</li>
+            <li><b>实时进度</b>按豆包预计时间显示进度，完成后下载无水印视频</li>
+            <li><b>失败重试</b>失败会自动重试，直到生成成功</li>
+            <li><b>掉线 / 验证码</b>掉线时在这里显示登录二维码；遇到验证码会提醒你手动完成</li>
+          </ol>
+        </details>
+      </section>
+
+      <!-- Board -->
+      <section class="card board" aria-labelledby="board-title">
+        <div class="board-head">
+          <div class="board-title">
+            <h2 id="board-title">任务</h2>
+            <span class="badge" id="task-count">0</span>
+          </div>
+          <div class="board-actions">
+            <button class="btn ghost sm" id="btn-pause" type="button"><svg class="ic"><use href="#i-pause"/></svg><span>暂停队列</span></button>
+            <button class="btn ghost sm" id="btn-clear" type="button"><svg class="ic"><use href="#i-trash"/></svg>清除已结束</button>
+          </div>
+        </div>
+        <div class="filters" role="tablist" aria-label="筛选任务" id="filters">
+          <button type="button" class="active" data-filter="all">全部 <span>0</span></button>
+          <button type="button" data-filter="active">进行中 <span>0</span></button>
+          <button type="button" data-filter="retry">等待重试 <span>0</span></button>
+          <button type="button" data-filter="success">成功 <span>0</span></button>
+          <button type="button" data-filter="failed">失败 <span>0</span></button>
+        </div>
+        <div id="task-list" class="task-list"></div>
+        <div id="empty" class="empty">
+          <svg viewBox="0 0 160 120" class="empty-art" aria-hidden="true">
+            <rect x="58" y="10" width="44" height="78" rx="9" class="ea-frame"/>
+            <path d="M74 38l16 11-16 11z" class="ea-play"/>
+            <path d="M118 26l2.4 6.6L127 35l-6.6 2.4L118 44l-2.4-6.6L109 35l6.6-2.4z" class="ea-spark"/>
+            <path d="M40 58l1.6 4.4L46 64l-4.4 1.6L40 70l-1.6-4.4L34 64l4.4-1.6z" class="ea-spark"/>
+            <rect x="30" y="98" width="100" height="6" rx="3" class="ea-line"/>
+          </svg>
+          <h3 id="empty-title">还没有任务</h3>
+          <p id="empty-sub">在左侧写好提示词、选择参考图文件夹，点「加入队列」即可开始。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span><svg class="ic"><use href="#i-shield"/></svg>仅在本机运行 · <span id="version"></span></span>
+      <button class="btn ghost sm" id="btn-quit" type="button"><svg class="ic"><use href="#i-power"/></svg>退出程序</button>
+    </footer>
+  </div>
+
+  <!-- Settings -->
+  <dialog id="settings" class="modal">
+    <form id="settings-form" class="modal-body" novalidate>
+      <div class="modal-head">
+        <h2>设置</h2>
+        <button type="button" class="icon-btn" data-close aria-label="关闭"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+
+      <section class="set-sec">
+        <h3><svg class="ic"><use href="#i-qr"/></svg>豆包登录</h3>
+        <p class="explain">工具使用独立的 Chrome 窗口，不影响日常 Chrome。可以从日常 Chrome 一键导入豆包登录（macOS 可能请求钥匙串授权，请点「允许」），也可以扫码登录。</p>
+        <div class="row">
+          <select id="profile-select" aria-label="Chrome 用户"></select>
+          <button type="button" class="btn" id="btn-import"><svg class="ic"><use href="#i-refresh"/></svg>从 Chrome 导入</button>
+          <button type="button" class="btn" id="btn-qr-login"><svg class="ic"><use href="#i-qr"/></svg>扫码登录</button>
+        </div>
+        <div class="login-line" id="login-line"></div>
+        <label class="switch-row"><input type="checkbox" class="switch" id="s-auto-import"><span>掉线时先自动从日常 Chrome 导入登录，失败再显示二维码</span></label>
+      </section>
+
+      <section class="set-sec">
+        <h3><svg class="ic"><use href="#i-film"/></svg>生成与保存</h3>
+        <div class="grid2">
+          <label class="field full"><span class="field-label">视频保存位置</span><input id="s-output" type="text" spellcheck="false"></label>
+          <label class="field"><span class="field-label">自动回复内容</span><input id="s-continue" type="text"></label>
+          <label class="field"><span class="field-label">每轮最多自动回复</span><span class="unit"><input id="s-max-continue" type="number" min="1" max="10"><em>次</em></span></label>
+          <label class="field"><span class="field-label">等待回复超时</span><span class="unit"><input id="s-reply-timeout" type="number" min="1" max="60"><em>分钟</em></span></label>
+          <label class="field"><span class="field-label">生成超时</span><span class="unit"><input id="s-gen-timeout" type="number" min="10" max="1440"><em>分钟</em></span></label>
+        </div>
+      </section>
+
+      <section class="set-sec">
+        <h3><svg class="ic"><use href="#i-retry"/></svg>失败自动重试</h3>
+        <label class="switch-row"><input type="checkbox" class="switch" id="s-auto-retry"><span>失败后自动重试，直到生成成功</span></label>
+        <div class="grid2">
+          <label class="field"><span class="field-label">最多重试次数（0 = 不限）</span><span class="unit"><input id="s-max-retries" type="number" min="0" max="1000"><em>次</em></span></label>
+          <label class="field"><span class="field-label">首次重试等待（之后逐次加倍）</span><span class="unit"><input id="s-retry-delay" type="number" min="0.5" max="240" step="0.5"><em>分钟</em></span></label>
+          <label class="field"><span class="field-label">重试等待上限</span><span class="unit"><input id="s-retry-max" type="number" min="1" max="1440"><em>分钟</em></span></label>
+          <label class="field"><span class="field-label">额度用完后等待</span><span class="unit"><input id="s-quota-wait" type="number" min="5" max="1440"><em>分钟</em></span></label>
+        </div>
+        <p class="explain">审核拒绝、生成失败、没有回复等会新建对话重试；下载失败或超时先重新检查原对话，不会重复消耗额度；参考图本身有问题（如超过 10 张）不会重试。</p>
+      </section>
+
+      <section class="set-sec">
+        <h3><svg class="ic"><use href="#i-bolt"/></svg>节奏控制</h3>
+        <div class="grid2">
+          <label class="field"><span class="field-label">同时进行的任务数</span><span class="unit"><input id="s-parallel" type="number" min="1" max="5"><em>个</em></span><small class="hint">越多越容易被豆包判定频繁而下线，建议 1</small></label>
+          <label class="field"><span class="field-label">两次提交最小间隔</span><span class="unit"><input id="s-submit-gap" type="number" min="5" max="3600"><em>秒</em></span></label>
+        </div>
+        <label class="switch-row"><input type="checkbox" class="switch" id="s-notify"><span>成功、失败、掉线、验证码时发送系统通知</span></label>
+      </section>
+
+      <div class="modal-foot">
+        <button type="button" class="btn ghost" data-close>取消</button>
+        <button type="submit" class="btn primary" id="btn-save-settings"><svg class="ic"><use href="#i-check"/></svg>保存设置</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Player -->
+  <dialog id="player" class="modal player">
+    <div class="player-body">
+      <div class="modal-head">
+        <h2 id="player-title">视频</h2>
+        <button type="button" class="icon-btn" data-close aria-label="关闭"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+      <video id="player-video" controls playsinline></video>
+      <div class="player-meta" id="player-meta"></div>
+    </div>
+  </dialog>
+
+  <!-- Image viewer (captcha screenshot) -->
+  <dialog id="viewer" class="modal viewer">
+    <div class="player-body">
+      <div class="modal-head">
+        <h2>验证码截图</h2>
+        <button type="button" class="icon-btn" data-close aria-label="关闭"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+      <img id="viewer-img" alt="验证码截图">
+      <p class="hint">截图仅供查看，请在自动化 Chrome 窗口中手动完成验证。</p>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"><svg class="ic"><use href="#i-check"/></svg><span></span></div>
+  <script src="/static/app.js?v=__VERSION__"></script>
+</body>
+</html>
