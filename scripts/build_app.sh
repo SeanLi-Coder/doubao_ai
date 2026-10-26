@@ -9,6 +9,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="$(sed -n 's/^__version__ = "\(.*\)"/\1/p' "$ROOT/app/__init__.py")"
 OUT_DIR="${1:-$ROOT/dist}"
+mkdir -p "$OUT_DIR"
+OUT_DIR="$(cd "$OUT_DIR" && pwd)"
 APP_NAME="豆包视频批量生成"
 APP="$OUT_DIR/$APP_NAME.app"
 BUNDLE_ID="com.seanli.doubao-video-batch"
